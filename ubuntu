@@ -1,0 +1,14 @@
+#!/bin/bash
+
+USERNAME="username"
+PASSWORD="password"
+
+clear
+apt-get update
+apt-get install apache2-utils squid3 -y
+htpasswd -b -c /etc/squid3/passwd $USERNAME $PASSWORD
+wget -O /etc/squid3/squid.conf https://raw.githubusercontent.com/hidden-refuge/spi/master/spi-jessie.conf/raw/196e1b60322a7b139b9177e7cd46e462560ed492/spi-jessie.conf --no-check-certificate
+touch /etc/squid3/blacklist.acl
+service squid3 restart && update-rc.d squid3 defaults
+iptables -I INPUT -p tcp --dport 3128 -j ACCEPT
+iptables-save
